@@ -1,4 +1,4 @@
-package core;
+package tree;
 
 public class TreeController {
 }

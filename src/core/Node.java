@@ -1,21 +1,23 @@
 package core;
 
+import static java.lang.System.arraycopy;
+
 public class Node {
 
     /**
      * An array of keys
      */
-    public int[] keys;
+    public final int[] keys;
 
     /**
      * Minimum degree (range of no. of trees)
      */
-    public int t;
+    public final int t;
 
     /**
      * An array of children
      */
-    public Node[] C;
+    public final Node[] C;
 
     /**
      * Current number of keys
@@ -25,7 +27,7 @@ public class Node {
     /**
      * If the node is leaf
      */
-    public boolean leaf;
+    public final boolean leaf;
 
     /**
      * @param _t    minimum degree
@@ -140,31 +142,34 @@ public class Node {
      * @param y the child
      */
     public void splitChild(int i, Node y) {
-        // Create a new node which is going to store (t-1) keys
-        // of y
-        Node z = new Node(y.t, y.leaf);
-        z.n = t - 1;
+        // Create a new node which is going to store (t-1) keys of y
+        Node node = new Node(y.t, y.leaf);
+        node.n = t - 1;
 
         // Copy the last (t-1) keys of y to z
-        if (t - 1 >= 0) System.arraycopy(y.keys, t, z.keys, 0, t - 1);
+        if (t - 1 >= 0) arraycopy(y.keys, t, node.keys, 0, t - 1);
 
         // Copy the last t children of y to z
         if (!y.leaf)
-            if (t >= 0) System.arraycopy(y.C, t, z.C, 0, t);
+            if (t >= 0) {
+                arraycopy(y.C, t, node.C, 0, t);
+            }
 
         // Reduce the number of keys in y
         y.n = t - 1;
 
         // Since this node is going to have a new child,
         // create space of new child
-        if (n + 1 - i + 1 >= 0) System.arraycopy(C, i + 1, C, i + 1 + 1, n + 1 - i + 1);
+        if (n + 1 - i + 1 >= 0) {
+            arraycopy(C, i + 1, C, i + 1 + 1, n + 1 - i + 1);
+        }
 
         // Link the new child to this node
-        C[i + 1] = z;
+        C[i + 1] = node;
 
         // A key of y will move to this node. Find the location of
         // new key and move all greater keys one space ahead
-        if (n - i >= 0) System.arraycopy(keys, i, keys, i + 1, n - i);
+        if (n - i >= 0) arraycopy(keys, i, keys, i + 1, n - i);
 
         // Copy the middle key of y to this node
         keys[i] = y.keys[t - 1];
@@ -220,7 +225,9 @@ public class Node {
      */
     public void removeFromLeaf(int index) {
         // Move all the keys after the index-th pos one place backward
-        if (n - index + 1 >= 0) System.arraycopy(keys, index + 1, keys, index + 1 - 1, n - index + 1);
+        if (n - index + 1 >= 0) {
+            arraycopy(keys, index + 1, keys, index + 1 - 1, n - index + 1);
+        }
         // Reduce the count of keys
         n--;
     }
@@ -234,7 +241,7 @@ public class Node {
     public void removeFromNonLeaf(int index) {
         int k = keys[index];
 
-        // If the child that precedes k (C[index]) has atleast t keys,
+        // If the child that precedes k (C[index]) has at least t keys,
         // find the predecessor 'pred' of k in the subtree rooted at
         // C[index]. Replace k by pred. Recursively delete pred
         // in C[index]
@@ -340,11 +347,11 @@ public class Node {
         // sibling one key and child gains one key
 
         // Moving all key in C[index] one step ahead
-        if (child.n - 1 + 1 >= 0) System.arraycopy(child.keys, 0, child.keys, 1, child.n - 1 + 1);
+        if (child.n - 1 + 1 >= 0) arraycopy(child.keys, 0, child.keys, 1, child.n - 1 + 1);
 
         // If C[index] is not a leaf, move all its child pointers one step ahead
         if (!child.leaf) {
-            if (child.n + 1 >= 0) System.arraycopy(child.C, 0, child.C, 1, child.n + 1);
+            if (child.n + 1 >= 0) arraycopy(child.C, 0, child.C, 1, child.n + 1);
         }
 
         // Setting child's first key equal to keys[index-1] from the current node
@@ -385,11 +392,11 @@ public class Node {
 
         // Moving all keys in sibling one step behind
         if (sibling.n - 1 >= 0)
-            System.arraycopy(sibling.keys, 1, sibling.keys, 0, sibling.n - 1);
+            arraycopy(sibling.keys, 1, sibling.keys, 0, sibling.n - 1);
 
         // Moving the child pointers one step behind
         if (!sibling.leaf)
-            if (sibling.n >= 0) System.arraycopy(sibling.C, 1, sibling.C, 0, sibling.n);
+            if (sibling.n >= 0) arraycopy(sibling.C, 1, sibling.C, 0, sibling.n);
 
 
         // Increasing and decreasing the key count of C[index] and C[index+1]
@@ -413,20 +420,26 @@ public class Node {
         child.keys[t - 1] = keys[index];
 
         // Copying the keys from C[index+1] to C[index] at the end
-        if (sibling.n >= 0) System.arraycopy(sibling.keys, 0, child.keys, 0 + t, sibling.n);
+        if (sibling.n >= 0) {
+            arraycopy(sibling.keys, 0, child.keys, t, sibling.n);
+        }
 
         // Copying the child pointers from C[index+1] to C[index]
         if (!child.leaf) {
-            if (sibling.n + 1 >= 0) System.arraycopy(sibling.C, 0, child.C, 0 + t, sibling.n + 1);
+            if (sibling.n + 1 >= 0) arraycopy(sibling.C, 0, child.C, t, sibling.n + 1);
         }
 
         // Moving all keys after index in the current node one step before -
         // to fill the gap created by moving keys[index] to C[index]
-        if (n - index + 1 >= 0) System.arraycopy(keys, index + 1, keys, index + 1 - 1, n - index + 1);
+        if (n - index + 1 >= 0) {
+            arraycopy(keys, index + 1, keys, index + 1 - 1, n - index + 1);
+        }
 
         // Moving the child pointers after (index+1) in the current node one
         // step before
-        if (n + 1 - index + 2 >= 0) System.arraycopy(C, index + 2, C, index + 2 - 1, n + 1 - index + 2);
+        if (n + 1 - index + 2 >= 0) {
+            arraycopy(C, index + 2, C, index + 2 - 1, n + 1 - index + 2);
+        }
 
         // Updating the key count of child and the current node
         child.n += sibling.n + 1;

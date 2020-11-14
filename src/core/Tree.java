@@ -9,7 +9,7 @@ public class Tree {
     /**
      * Minimum degree
      */
-    public int t;
+    public final int t;
 
     /**
      * Constructor of B-Tree
@@ -69,8 +69,8 @@ public class Tree {
                 s.C[i].insertNonFull(k);
                 // Change root
                 root = s;
-            } else  // If root is not full, call insertNonFull for root
-                root.insertNonFull(k);
+            } else root.insertNonFull(k);
+            // If root is not full, call insertNonFull for root
         }
     }
 
@@ -88,11 +88,8 @@ public class Tree {
         // If the root node has 0 keys, make its first child as the new root
         //  if it has a child, otherwise set root as NULL
         if (root.n == 0) {
-            Node tmp = root;
-            if (root.leaf)
-                root = null;
-            else
-                root = root.C[0];
+            if (root.leaf) root = null;
+            else root = root.C[0];
         }
     }
 }

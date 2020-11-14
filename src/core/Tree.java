@@ -14,11 +14,11 @@ public class Tree {
     /**
      * Constructor of B-Tree
      *
-     * @param t minimum degree
+     * @param _t minimum degree
      */
-    public Tree(int t) {
-        this.root = null;
-        this.t = t;
+    public Tree(int _t) {
+        root = null;
+        t = _t;
     }
 
     /**
@@ -37,7 +37,6 @@ public class Tree {
     public Node search(int k) {
         return root == null ? null : root.search(k);
     }
-
 
     /**
      * Function to insert a new key into the B-Tree
@@ -72,6 +71,28 @@ public class Tree {
                 root = s;
             } else  // If root is not full, call insertNonFull for root
                 root.insertNonFull(k);
+        }
+    }
+
+    /**
+     * Function to remove a key from the tree
+     *
+     * @param k key to remove from the tree
+     */
+    public void remove(int k) {
+        if (root == null) System.out.println("The tree is empty");
+
+        // Call the remove function for root
+        root.remove(k);
+
+        // If the root node has 0 keys, make its first child as the new root
+        //  if it has a child, otherwise set root as NULL
+        if (root.n == 0) {
+            Node tmp = root;
+            if (root.leaf)
+                root = null;
+            else
+                root = root.C[0];
         }
     }
 }

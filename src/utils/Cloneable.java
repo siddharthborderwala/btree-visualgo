@@ -2,7 +2,7 @@ package utils;
 
 import java.io.*;
 
-public class MyUtil {
+public class Cloneable {
     public static <T extends Serializable> T clone(T object) {
         T cloneObject = null;
         try {
@@ -10,7 +10,6 @@ public class MyUtil {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             objectOutputStream.writeObject(object);
             objectOutputStream.close();
-
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
             cloneObject = (T) objectInputStream.readObject();

@@ -3,7 +3,7 @@ package model;
 import java.io.Serializable;
 import java.util.LinkedList;
 
-import utils.MyUtil;
+import utils.Cloneable;
 
 public class BTree<K extends Comparable<K>> implements Serializable {
     private static final long serialVersionUID = 123456789;
@@ -148,7 +148,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
             fullNode.addKey(fullNodeSize, key);
 
 
-        stepTrees.add(MyUtil.clone(this));
+        stepTrees.add(Cloneable.clone(this));
 
         return getHalfKeys(fullNode);
     }
@@ -239,7 +239,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
         setSplitFatherNode(newNode);
 
 
-        stepTrees.add(MyUtil.clone(this));
+        stepTrees.add(Cloneable.clone(this));
     }
 
     /**
@@ -256,7 +256,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
             root.addChild(1, nullNode);
 
 
-            stepTrees.add(MyUtil.clone(this));
+            stepTrees.add(Cloneable.clone(this));
             return;
         }
 
@@ -290,7 +290,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
                     treeSize++;
 
 
-                    stepTrees.add(MyUtil.clone(this));
+                    stepTrees.add(Cloneable.clone(this));
                     return;
                 } else {
                     i++;
@@ -301,7 +301,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
             treeSize++;
 
 
-            stepTrees.add(MyUtil.clone(this));
+            stepTrees.add(Cloneable.clone(this));
         } else {
             Node<K> newChildNode = getHalfKeys(key, currentNode);
             for (int i = 0; i < halfNumber; i++) {
@@ -317,7 +317,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
             newChildNode.setFather(currentNode);
             treeSize++;
 
-            stepTrees.add(MyUtil.clone(this));
+            stepTrees.add(Cloneable.clone(this));
 
             if (!currentNode.getFather().equals(nullNode)) {
                 while (!currentNode.getFather().isOverflow() && !currentNode.getFather().equals(nullNode)) {
@@ -326,7 +326,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
                         mergeWithFatherNode(currentNode);
                         currentNode = currentNode.getFather();
 
-                        stepTrees.add(MyUtil.clone(this));
+                        stepTrees.add(Cloneable.clone(this));
 
                         if (currentNode.isOverflow()) {
                             processOverflow(currentNode);
@@ -399,7 +399,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
             if (node.isLastInternalNode()) {
                 node.removeChild(0);
             }
-            stepTrees.add(MyUtil.clone(this));
+            stepTrees.add(Cloneable.clone(this));
             return node;
         } else {
             if (flag) {
@@ -438,7 +438,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
                     currentNode.getChild(currentNodeSize + i).setFather(currentNode);
                 }
             }
-            stepTrees.add(MyUtil.clone(this));
+            stepTrees.add(Cloneable.clone(this));
             return fatherNode;
         }
     }
@@ -464,7 +464,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
             currentNode.addKey(currentNodeSize - 1, node.getKey(index + 1));
             node.removeKey(index + 1);
             index = currentNode.getSize() - 1;
-            stepTrees.add(MyUtil.clone(this));
+            stepTrees.add(Cloneable.clone(this));
         } else {
             node.addKey(index + 1, currentNode.getKey(0));
             currentNode.removeKey(0);
@@ -472,7 +472,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
             node.removeKey(index);
             index = 0;
 
-            stepTrees.add(MyUtil.clone(this));
+            stepTrees.add(Cloneable.clone(this));
         }
         return currentNode;
     }
@@ -488,7 +488,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
      */
     public void delete(K key) {
 
-        stepTrees.add(MyUtil.clone(this));
+        stepTrees.add(Cloneable.clone(this));
         Node<K> node = getNode(key);
         Node<K> deleteNode = null;
         if (node.equals(nullNode))
@@ -497,7 +497,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
         if (node.equals(root) && node.getSize() == 1 && node.isLastInternalNode()) {
             root = null;
             treeSize--;
-            stepTrees.add(MyUtil.clone(this));
+            stepTrees.add(Cloneable.clone(this));
         } else {
             boolean flag = true;
             boolean isReplaced = false;
@@ -553,7 +553,7 @@ public class BTree<K extends Comparable<K>> implements Serializable {
                     }
                 }
                 treeSize--;
-                stepTrees.add(MyUtil.clone(this));
+                stepTrees.add(Cloneable.clone(this));
             }
         }
     }

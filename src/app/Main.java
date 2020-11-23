@@ -20,6 +20,7 @@ public class Main extends Application {
 
     private int key;
     private BTreePane btPane;
+    private InfoPane infoPane;
     private final TextField keyText = new TextField();
     private final Button previousButton = new Button("Prev");
     private final Button nextButton = new Button("Next");
@@ -36,7 +37,6 @@ public class Main extends Application {
         BorderPane root = new BorderPane();
 
         HBox hBox = new HBox(15);
-        root.setTop(hBox);
         BorderPane.setMargin(hBox, new Insets(10, 10, 10, 10));
         keyText.setPrefWidth(60);
         keyText.setAlignment(Pos.BASELINE_RIGHT);
@@ -48,15 +48,19 @@ public class Main extends Application {
         resetButton.setStyle("-fx-base: red;");
         Label nullLabel = new Label();
         nullLabel.setPrefWidth(30);
-
-        hBox.getChildren().addAll(new Label("Enter a number: "), keyText, insertButton, deleteButton, searchButton,
-                resetButton, nullLabel, previousButton, nextButton);
-        hBox.setAlignment(Pos.CENTER);
         checkVisible();
 
         btPane = new BTreePane(windowWidth >> 1, 50, bTree);
-        btPane.setPrefSize(windowWidth, windowHeight);
+        infoPane = new InfoPane();
+
+        root.setTop(hBox);
         root.setCenter(btPane);
+
+        hBox.getChildren().addAll(
+                new Label("Enter a number: "), keyText, insertButton, deleteButton,
+                searchButton, resetButton, nullLabel, previousButton, nextButton, infoPane
+        );
+        hBox.setAlignment(Pos.TOP_LEFT);
 
         insertButton.setOnMouseClicked(e -> insertValue());
         deleteButton.setOnMouseClicked(e -> deleteValue());
@@ -65,7 +69,7 @@ public class Main extends Application {
         previousButton.setOnMouseClicked(e -> goPrevious());
         nextButton.setOnMouseClicked(e -> goNext());
 
-        Scene scene = new Scene(root, 720, 360);
+        Scene scene = new Scene(root, 820, 420);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         primaryStage.setTitle("B-Tree Visualization");
         primaryStage.setScene(scene);
@@ -93,15 +97,14 @@ public class Main extends Application {
             key = Integer.parseInt(keyText.getText());
             keyText.setText("");
             bTree.setStepTrees(new LinkedList<>());
-
             bTree.insert(key);
-
             index = 0;
             bTreeLinkedList = bTree.getStepTrees();
             btPane.updatePane(bTreeLinkedList.get(0));
+            infoPane.updatePane(bTree.getHeight(), bTree.getTreeSize());
             checkVisible();
         } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Illegal input data!", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Enter a number!", ButtonType.YES);
             alert.show();
         }
     }
@@ -114,18 +117,17 @@ public class Main extends Application {
                 throw new Exception("Not in the tree!");
             }
             bTree.setStepTrees(new LinkedList<>());
-
             bTree.delete(key);
-
             index = 0;
             bTreeLinkedList = bTree.getStepTrees();
             btPane.updatePane(bTreeLinkedList.get(0));
+            infoPane.updatePane(bTree.getHeight(), bTree.getTreeSize());
             checkVisible();
         } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Illegal input data!", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Enter a number!", ButtonType.YES);
             alert.show();
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage(), ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage(), ButtonType.YES);
             alert.show();
         }
     }
@@ -134,14 +136,12 @@ public class Main extends Application {
         try {
             key = Integer.parseInt(keyText.getText());
             keyText.setText("");
-
             btPane.searchPathColoring(bTree, key);
-
         } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Illegal input data!", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Enter a number!", ButtonType.YES);
             alert.show();
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage(), ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage(), ButtonType.YES);
             alert.show();
         }
     }
@@ -150,7 +150,6 @@ public class Main extends Application {
         if (index > 0) {
             index--;
             btPane.updatePane(bTreeLinkedList.get(index));
-
             checkVisible();
         }
     }
@@ -160,18 +159,17 @@ public class Main extends Application {
             index++;
             System.out.println("index: " + index + " - size: " + bTreeLinkedList.size());
             btPane.updatePane(bTreeLinkedList.get(index));
-
             checkVisible();
         }
     }
 
     private void reset() {
         keyText.setText("");
-
         bTree.setRoot(null);
         index = 0;
         bTreeLinkedList.clear();
         btPane.updatePane(bTree);
+        infoPane.updatePane(0, 0);
         checkVisible();
     }
 }

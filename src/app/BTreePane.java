@@ -59,7 +59,6 @@ public class BTreePane extends Pane {
                     double startX2, endX;
 
                     if ((double) i > ((double) root.getSize()) / 2) {
-
                         startX2 = startX
                                 + ((bTree.getOrder() - 1) * (bTree.getHeight(root.getChild(i)) - 1) * size >> 1);
                         endX = startX2 + ((double) root.getChild(i).getSize()) / 2 * size;

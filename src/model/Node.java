@@ -1,20 +1,20 @@
-package core;
+package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BTNode<E extends Comparable<E>> implements Serializable {
-    private static final long serialVersionUID = 987654321;
+public class Node<E extends Comparable<E>> implements Serializable {
+    private static final long serialVersionUID = 123456789;
 
     private int fullNumber;
-    private BTNode<E> father;
-    private final ArrayList<BTNode<E>> children = new ArrayList<>();
+    private Node<E> father;
+    private final ArrayList<Node<E>> children = new ArrayList<>();
     private final ArrayList<E> keys = new ArrayList<>();
 
-    public BTNode() {
+    public Node() {
     }
 
-    public BTNode(int order) {
+    public Node(int order) {
         fullNumber = order - 1;
     }
 
@@ -24,7 +24,7 @@ public class BTNode<E extends Comparable<E>> implements Serializable {
     public boolean isLastInternalNode() {
         if (keys.size() == 0)
             return false;
-        for (BTNode<E> node : children)
+        for (Node<E> node : children)
             if (node.keys.size() != 0)
                 return false;
         return true;
@@ -33,18 +33,18 @@ public class BTNode<E extends Comparable<E>> implements Serializable {
     /**
      * @return the father
      */
-    public BTNode<E> getFather() {
+    public Node<E> getFather() {
         return father;
     }
 
     /**
      * @param father the father to set
      */
-    public void setFather(BTNode<E> father) {
+    public void setFather(Node<E> father) {
         this.father = father;
     }
 
-    public ArrayList<BTNode<E>> getChildren() {
+    public ArrayList<Node<E>> getChildren() {
         return children;
     }
 
@@ -52,7 +52,7 @@ public class BTNode<E extends Comparable<E>> implements Serializable {
      * @param index the index to get
      * @return the child
      */
-    public BTNode<E> getChild(int index) {
+    public Node<E> getChild(int index) {
         return children.get(index);
     }
 
@@ -60,7 +60,7 @@ public class BTNode<E extends Comparable<E>> implements Serializable {
      * @param index the index to add
      * @param node  the node to be added
      */
-    public void addChild(int index, BTNode<E> node) {
+    public void addChild(int index, Node<E> node) {
         children.add(index, node);
     }
 

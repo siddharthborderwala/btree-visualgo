@@ -1,6 +1,6 @@
 package app;
 
-import core.BTree;
+import model.BTree;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,7 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import tree.BTreePane;
 
 import java.util.LinkedList;
 
@@ -31,20 +30,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // TODO Auto-generated method stub
         final int windowHeight = 480;
         final int windowWidth = 720;
 
         BorderPane root = new BorderPane();
 
-        // Create button HBox on top
         HBox hBox = new HBox(15);
         root.setTop(hBox);
         BorderPane.setMargin(hBox, new Insets(10, 10, 10, 10));
-        // TextField
         keyText.setPrefWidth(60);
         keyText.setAlignment(Pos.BASELINE_RIGHT);
-        // Button
         Button insertButton = new Button("Insert");
         Button deleteButton = new Button("Delete");
         Button searchButton = new Button("Search");
@@ -59,9 +54,8 @@ public class Main extends Application {
         hBox.setAlignment(Pos.CENTER);
         checkVisible();
 
-        // Create TreePane in center
         btPane = new BTreePane(windowWidth >> 1, 50, bTree);
-        btPane.setPrefSize(windowHeight, windowWidth);
+        btPane.setPrefSize(windowWidth, windowHeight);
         root.setCenter(btPane);
 
         insertButton.setOnMouseClicked(e -> insertValue());
@@ -71,7 +65,6 @@ public class Main extends Application {
         previousButton.setOnMouseClicked(e -> goPrevious());
         nextButton.setOnMouseClicked(e -> goNext());
 
-        // Create a scene
         Scene scene = new Scene(root, 720, 360);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         primaryStage.setTitle("B-Tree Visualization");
@@ -99,7 +92,7 @@ public class Main extends Application {
         try {
             key = Integer.parseInt(keyText.getText());
             keyText.setText("");
-            bTree.setStepTrees(new LinkedList<BTree<Integer>>());
+            bTree.setStepTrees(new LinkedList<>());
 
             bTree.insert(key);
 
@@ -117,10 +110,10 @@ public class Main extends Application {
         try {
             key = Integer.parseInt(keyText.getText());
             keyText.setText("");
-            if (bTree.getNode(key) == bTree.nullBTNode) {
+            if (bTree.getNode(key) == bTree.nullNode) {
                 throw new Exception("Not in the tree!");
             }
-            bTree.setStepTrees(new LinkedList<BTree<Integer>>());
+            bTree.setStepTrees(new LinkedList<>());
 
             bTree.delete(key);
 

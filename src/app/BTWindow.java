@@ -1,8 +1,8 @@
-package tree;
+package app;
 
 import java.util.LinkedList;
 
-import core.BTree;
+import model.BTree;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -14,18 +14,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 public class BTWindow extends BorderPane {
-    private int windowHeight;
-    private int windowWidth;
+    private final int windowHeight;
+    private final int windowWidth;
 
     private int key;
     private BTreePane btPane;
-    private TextField keyText = new TextField();
-    private Button previousButton = new Button("Prev");
-    private Button nextButton = new Button("Next");
+    private final TextField keyText = new TextField();
+    private final Button previousButton = new Button("Prev");
+    private final Button nextButton = new Button("Next");
 
     private int index = 0;
-    private LinkedList<BTree<Integer>> bTreeLinkedList = new LinkedList<BTree<Integer>>();
-    private BTree<Integer> bTree = new BTree<Integer>(3);
+    private LinkedList<BTree<Integer>> bTreeLinkedList = new LinkedList<>();
+    private final BTree<Integer> bTree = new BTree<>(3);
 
     public BTWindow(int windowWidth, int windowHeight) {
         super();
@@ -34,14 +34,11 @@ public class BTWindow extends BorderPane {
     }
 
     public void run() {
-        // Create button HBox on top
         HBox hBox = new HBox(15);
         this.setTop(hBox);
         BorderPane.setMargin(hBox, new Insets(10, 10, 10, 10));
-        // TextField
         keyText.setPrefWidth(60);
         keyText.setAlignment(Pos.BASELINE_RIGHT);
-        // Button
         Button insertButton = new Button("Insert");
         Button deleteButton = new Button("Delete");
         Button searchButton = new Button("Search");
@@ -56,11 +53,8 @@ public class BTWindow extends BorderPane {
         hBox.setAlignment(Pos.CENTER);
         checkVisible();
 
-        // Create TreePane in center
-        // TODO: chinh lai x, y theo size window
-        btPane = new BTreePane(windowWidth / 2, 50, bTree);
+        btPane = new BTreePane(windowWidth >> 1, 50, bTree);
         btPane.setPrefSize(windowHeight, windowWidth);
-//				bTreeLinkedList.add(CloneUtils.clone(bTree));
         this.setCenter(btPane);
 
         insertButton.setOnMouseClicked(e -> insertValue());
@@ -91,7 +85,7 @@ public class BTWindow extends BorderPane {
         try {
             key = Integer.parseInt(keyText.getText());
             keyText.setText("");
-            bTree.setStepTrees(new LinkedList<BTree<Integer>>());
+            bTree.setStepTrees(new LinkedList<>());
 
             bTree.insert(key);
 
@@ -109,10 +103,10 @@ public class BTWindow extends BorderPane {
         try {
             key = Integer.parseInt(keyText.getText());
             keyText.setText("");
-            if (bTree.getNode(key) == bTree.nullBTNode) {
+            if (bTree.getNode(key) == bTree.nullNode) {
                 throw new Exception("Not in the tree!");
             }
-            bTree.setStepTrees(new LinkedList<BTree<Integer>>());
+            bTree.setStepTrees(new LinkedList<>());
 
             bTree.delete(key);
 

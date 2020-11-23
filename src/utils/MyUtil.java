@@ -2,8 +2,7 @@ package utils;
 
 import java.io.*;
 
-public class CloneUtils {
-    @SuppressWarnings("unchecked")
+public class MyUtil {
     public static <T extends Serializable> T clone(T object) {
         T cloneObject = null;
         try {
